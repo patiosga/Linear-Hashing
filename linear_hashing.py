@@ -6,7 +6,11 @@ class LinearHashing:
         self.round = 0  # using hash functions h_round and h_{round+1}
         self.next_bucket = 0  # pointer to next bucket to insert / 0 to next - 1 buckets have been split in this round
         self.d_0 = d_0  # number of buckets - d0 = 2 where i look for the 2^d_i last bits to calculate h_i
-        self.buckets = [Bucket() for _ in range(2**d_0)]  # list of buckets
+
+        self.dr_powered = 2 ** (d_0 + self.round)  # number of buckets / to not calculate it every time in hash function
+        self.dr_powered_2 = 2 ** (d_0 + self.round + 1)
+
+        self.buckets = [Bucket() for _ in range(self.dr_powered)]  # list of buckets
 
 
     def hash_func(self, x, d_i):
@@ -19,7 +23,11 @@ class LinearHashing:
         """
         x1 = x & 0xFFFF  # Isolate lower 16 bits
         x2 = (x >> 16) ^ x1  # Isolate upper 16 bits and XOR with lower bits
-        return x2 % (2 ** (d_i))  # get last `d_i` bits of x2 in integer form - short of
+          
+        # get last `d_i` bits of x2 in integer form - short of
+        # d_i is a power of 2 in this function / implementation
+        return x2 % (d_i)  
+    
 
     def insert(self, element):
         """
@@ -55,9 +63,11 @@ class LinearHashing:
             self.buckets[index].insert(element) # insert element in corresponding bucket (indicated by index)
 
         # Check for new round
-        if (self.next_bucket == 2 ** (self.d_0 + self.round)):  # if all buckets have been split in this round
+        if (self.next_bucket == self.dr_powered):  # if all buckets have been split in this round
             self.next_bucket = 0  # new round
-            self.round += 1  # increase round
+            self.round += 1  # increase 
+            self.dr_powered = 2 ** (self.d_0 + self.round)  # update number of buckets
+            self.dr_powered_2 = 2 ** (self.d_0 + self.round + 1)
 
     
     def find_bucket_index(self, element):
@@ -68,10 +78,10 @@ class LinearHashing:
         Returns:
             The index of the bucket.'''
         
-        hash_value = self.hash_func(element, self.d_0 + self.round)  # using h_round
+        hash_value = self.hash_func(element, self.dr_powered)  # using h_round
         # print(f"Hash value for element {element}: {hash_value} (next bucket: {self.next_bucket})")
         if (hash_value < self.next_bucket):  # if the hash value is smaller than the next bucket index, it means that the bucket has been split in this round
-            return self.hash_func(element, self.d_0 + self.round + 1)  # using h_{round+1}
+            return self.hash_func(element, self.dr_powered_2)  # using h_{round+1}
         else:
             return hash_value  # using h_round
         

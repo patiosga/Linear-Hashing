@@ -1,5 +1,5 @@
 class Bucket:
-    def __init__(self, capacity=10):  # each bucket has a default capacity of 10
+    def __init__(self, capacity=5):  # each bucket has a default capacity of 10
         self.capacity = capacity
         self.prim_pages = []
         self.overflow_pages = []
