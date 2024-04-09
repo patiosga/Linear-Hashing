@@ -57,4 +57,4 @@ class Bucket:
         
 
     def __str__(self):
-        return f"Primary pages: {self.prim_pages}\nOverflow pages: {self.overflow_pages}"
+        return "Primary pages: " + self.prim_pages + "\nOverflow pages: "+ self.overflow_pages

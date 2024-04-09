@@ -1,12 +1,12 @@
 from linear_hashing import LinearHashing
-import numpy as np
+import random
 import time
 
 
 if __name__ == '__main__':
     lh = LinearHashing()
     num_of_elements = 5000000
-    random_numbers = list(np.random.randint(-10000, 10000, num_of_elements))
+    random_numbers = [random.randint(-10000, 10000) for _ in range(num_of_elements)]
     
     start_time = time.time()
 
@@ -15,10 +15,10 @@ if __name__ == '__main__':
 
     end_time = time.time()
     execution_time = end_time - start_time
-    print(f"Insertion time: {execution_time} seconds for {num_of_elements} elements\n")
+    print("Insertion time %f seconds for %d elements\n" % (execution_time, num_of_elements))
 
     random_numbers = random_numbers[:num_of_elements//2]
-    np.concatenate((random_numbers, np.random.randint(-10000, 10000, num_of_elements//2)))  # concaetnate numbers that probably are not in the hash table
+    random_numbers += [random.randint(-10000, 10000) for _ in range(num_of_elements//2)]
 
     # Visualize the buckets
     # for i,bucket in enumerate(lh.buckets):
@@ -37,6 +37,6 @@ if __name__ == '__main__':
 
     end_time = time.time()
     execution_time = end_time - start_time
-    print(f"Find time: {execution_time} seconds for {num_of_elements} elements")
+    print("Search time %f seconds for %d elements\n" % (execution_time, num_of_elements))
 
 

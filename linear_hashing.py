@@ -51,8 +51,8 @@ class LinearHashing:
         self.next_bucket += 1  # move next_bucket pointer to the next bucket
 
         temp_pages = bucket_to_split.prim_pages + bucket_to_split.overflow_pages  # merge all pages to a temporary list
-        bucket_to_split.prim_pages.clear()  # clear all pages
-        bucket_to_split.overflow_pages.clear()
+        del bucket_to_split.prim_pages[:]  # clear all pages
+        del bucket_to_split.overflow_pages[:]
         bucket_to_split.next_insert = 0  # reset next_insert pointer
         
         self.buckets.append(Bucket())  # split image of next bucket
