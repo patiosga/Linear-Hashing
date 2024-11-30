@@ -10,7 +10,7 @@ class LinearHashing:
         self.dr_powered = 2 ** (d_0 + self.round)  # number of buckets / to not calculate it every time in hash function
         self.dr_powered_2 = 2 ** (d_0 + self.round + 1)
 
-        self.buckets = [Bucket() for _ in range(self.dr_powered)]  # list of buckets
+        self.buckets: list[Bucket] = [Bucket() for _ in range(self.dr_powered)]  # list of buckets
 
 
     def hash_func(self, x, d_i):
@@ -35,9 +35,25 @@ class LinearHashing:
         Args:
             element: The element to insert.
         """
-        index = self.find_bucket_index(element)
+        index: int = self.find_bucket_index(element)  # find the index of the bucket where the element should be inserted
         if (self.buckets[index].insert(element) == False):  # if the element was not inserted in the primary pages
             self.split_next_bucket()  # split bucket pointed be next_bucket
+
+
+    def delete(self, element):
+        """
+        This function deletes an element from the linear hashing structure.
+        Args:
+            element: The element to delete.
+        Returns:
+            True if the element was deleted, False if it was not found.
+        """
+        index: int = self.find_bucket_index(element)
+        if (self.buckets[index].find(element) == False):
+            return False
+        else:
+            self.buckets[index].delete(element)
+            return True
 
         
     def split_next_bucket(self):
@@ -50,7 +66,8 @@ class LinearHashing:
          # Update next_bucket and round
         self.next_bucket += 1  # move next_bucket pointer to the next bucket
 
-        temp_pages = bucket_to_split.prim_pages + bucket_to_split.overflow_pages  # merge all pages to a temporary list
+        # merge all pages to a temporary set
+        temp_pages = bucket_to_split.prim_pages.union(bucket_to_split.overflow_pages)  
         bucket_to_split.prim_pages.clear()  # clear all pages
         bucket_to_split.overflow_pages.clear()
         bucket_to_split.next_insert = 0  # reset next_insert pointer
@@ -95,5 +112,5 @@ class LinearHashing:
         Returns:
             True if the element exists, False otherwise.
         '''
-        index = self.find_bucket_index(element)
+        index: int = self.find_bucket_index(element)
         return self.buckets[index].find(element)
