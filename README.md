@@ -59,3 +59,8 @@ print(hash_table.element_exists(1))  # Output: False
 ```
 
 
+Bellow is a screenshot of the buckets printed in the terminal along their set with overflow pages
+
+![vis](fig.png)
+
+
